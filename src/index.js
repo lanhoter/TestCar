@@ -14,8 +14,6 @@ const liveApiURi = 'https://www.cartrawler.com/ctabe/cars.json'
 const localApiURi = 'http://0.0.0.0:3000/src/assets/static/cars.json'
 const liveApiURiwithProxy = `${proxyurl}${liveApiURi}`
 
-let scopeCars = ''
-let scopeSuppliers = ''
 // replace liveApiURiwithProxy here
 fetch(localApiURi)
   .then(response => response.json())
@@ -23,7 +21,7 @@ fetch(localApiURi)
     const bookInfo = dataJson[0].VehAvailRSCore.VehRentalCore
     const cars = dataJson[0].VehAvailRSCore.VehVendorAvails
     const suppliers = cars.map(car => car.Vendor['@Name'])
-    scopeSuppliers = suppliers
+    window.localStorage.setItem('scopeSuppliers', JSON.stringify(suppliers))
     renderBookingInfoForm(bookInfo)
     fillSuppilerFilter(suppliers)
     renderListing(cars)
@@ -109,7 +107,7 @@ const fillSuppilerFilter = (suppliers) => {
 */
 const renderListing = (cars) => {
   const totalCars = getTotal(cars)
-  scopeCars = totalCars
+  window.localStorage.setItem('scopeCars', JSON.stringify(totalCars))
   // sort by price (low to high) as default
   totalCars.sort((a, b) => parseFloat(a.TotalCharge['@RateTotalAmount']) - parseFloat(b.TotalCharge['@RateTotalAmount']))
   // render single table
@@ -232,15 +230,20 @@ const renderModal = (currentCar) => {
   renderSingleTable(currentCar, tableRightInnerTd2, modalContent, isModal)
 }
 
-// sort function
+// filter function
 const filterSelect = document.getElementById('categorySelect')
 // add event handler if value changes
 
 filterSelect.addEventListener('change', function () {
-  const selectedFilter = this.value
-  if (scopeSuppliers.includes(selectedFilter)) {
-    const filteredCars = scopeCars.filter(car => car['@Name'] === selectedFilter)
+  const scopeSupplierFilter = this.value
+  window.localStorage.setItem('scopeSupplierFilter', JSON.stringify(scopeSupplierFilter))
+  const scopeCars = JSON.parse(window.localStorage.getItem('scopeCars'))
+  const scopeSuppliers = JSON.parse(window.localStorage.getItem('scopeSuppliers'))
+  if (scopeSuppliers.includes(scopeSupplierFilter)) {
+    const filteredCars = scopeCars.filter(car => car['@Name'] === scopeSupplierFilter)
     rederSingleView(filteredCars)
+  } else {
+    rederSingleView(scopeCars)
   }
 })
 
@@ -250,37 +253,39 @@ const sortSelect = document.getElementById('select-sort')
 // add event handler if value changes
 sortSelect.addEventListener('change', function () {
   // this.value;
+  const scopeCars = JSON.parse(window.localStorage.getItem('scopeCars'))
+  const scopeSupplierFilter = JSON.parse(window.localStorage.getItem('scopeSupplierFilter'))
   if (this.value) {
-    selectElement('categorySelect', 'Select')
+    const scopeSortQry = this.value
+    window.localStorage.setItem('scopeSortQry', JSON.stringify(scopeSortQry))
+    let filteredCars
+    scopeSortQry !== 'all'
+      ? filteredCars = scopeCars.filter(car => car['@Name'].toLowerCase() === scopeSupplierFilter.toLowerCase())
+      : filteredCars = scopeCars
+    // selectElement('categorySelect', 'Select')
     switch (this.value) {
       case 'pricehl':
         // sort by price (low to high) as default, no need to do deepcopy here
-        scopeCars.sort((a, b) => parseFloat(b.TotalCharge['@RateTotalAmount']) - parseFloat(a.TotalCharge['@RateTotalAmount']))
+        filteredCars.sort((a, b) => parseFloat(b.TotalCharge['@RateTotalAmount']) - parseFloat(a.TotalCharge['@RateTotalAmount']))
         // render single table
-        rederSingleView(scopeCars)
+        rederSingleView(filteredCars)
         break
       case 'sizesl':
-        scopeCars.sort((a, b) => a.Vehicle['@PassengerQuantity'].localeCompare(b.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
-        rederSingleView(scopeCars)
+        filteredCars.sort((a, b) => a.Vehicle['@PassengerQuantity'].localeCompare(b.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
+        rederSingleView(filteredCars)
         break
       case 'sizels':
-        scopeCars.sort((a, b) => b.Vehicle['@PassengerQuantity'].localeCompare(a.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
-        rederSingleView(scopeCars)
+        filteredCars.sort((a, b) => b.Vehicle['@PassengerQuantity'].localeCompare(a.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
+        rederSingleView(filteredCars)
         break
       default:
-        scopeCars.sort((a, b) => parseFloat(a.TotalCharge['@RateTotalAmount']) - parseFloat(b.TotalCharge['@RateTotalAmount']))
+        filteredCars.sort((a, b) => parseFloat(a.TotalCharge['@RateTotalAmount']) - parseFloat(b.TotalCharge['@RateTotalAmount']))
         // render single table
-        rederSingleView(scopeCars)
+        rederSingleView(filteredCars)
         break
     }
   }
 })
-
-const selectElement = (id, valueToSelect) => {
-  const element = document.getElementById(id)
-  element.value = valueToSelect
-}
-
 /** helper function
  *  1. check target type
  *  2. deep copy of object or array
@@ -346,6 +351,9 @@ const showSearch = document.getElementById('showSearch')
 const getSearchInfo = () => {
   const searchPattern = `${search.value}`
   const filteredFuzzySuppliers = []
+  const scopeCars = JSON.parse(window.localStorage.getItem('scopeCars'))
+  const scopeSuppliers = JSON.parse(window.localStorage.getItem('scopeSuppliers'))
+
   scopeSuppliers.forEach(supplier => {
     if (supplier.toLowerCase().match(searchPattern.toLowerCase())) filteredFuzzySuppliers.push(supplier)
   })
