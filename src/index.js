@@ -276,7 +276,7 @@ sortSelect.addEventListener('change', function () {
   }
 })
 
-function selectElement (id, valueToSelect) {
+const selectElement = (id, valueToSelect) => {
   const element = document.getElementById(id)
   element.value = valueToSelect
 }
