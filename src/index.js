@@ -21,7 +21,7 @@ fetch(localApiURi)
     const bookInfo = dataJson[0].VehAvailRSCore.VehRentalCore
     const cars = dataJson[0].VehAvailRSCore.VehVendorAvails
     const suppliers = cars.map(car => car.Vendor['@Name'])
-    window.localStorage.setItem('scopeSuppliers', JSON.stringify(suppliers))
+    window.sessionStorage.setItem('scopeSuppliers', JSON.stringify(suppliers))
     renderBookingInfoForm(bookInfo)
     fillSuppilerFilter(suppliers)
     renderListing(cars)
@@ -107,7 +107,7 @@ const fillSuppilerFilter = (suppliers) => {
 */
 const renderListing = (cars) => {
   const totalCars = getTotal(cars)
-  window.localStorage.setItem('scopeCars', JSON.stringify(totalCars))
+  window.sessionStorage.setItem('scopeCars', JSON.stringify(totalCars))
   // sort by price (low to high) as default
   totalCars.sort((a, b) => parseFloat(a.TotalCharge['@RateTotalAmount']) - parseFloat(b.TotalCharge['@RateTotalAmount']))
   // render single table
@@ -235,10 +235,12 @@ const filterSelect = document.getElementById('categorySelect')
 // add event handler if value changes
 
 filterSelect.addEventListener('change', function () {
+  showSearch.innerText = ''
+  search.value = ''
   const scopeSupplierFilter = this.value
-  window.localStorage.setItem('scopeSupplierFilter', JSON.stringify(scopeSupplierFilter))
-  const scopeCars = JSON.parse(window.localStorage.getItem('scopeCars'))
-  const scopeSuppliers = JSON.parse(window.localStorage.getItem('scopeSuppliers'))
+  window.sessionStorage.setItem('scopeSupplierFilter', JSON.stringify(scopeSupplierFilter))
+  const scopeCars = JSON.parse(window.sessionStorage.getItem('scopeCars'))
+  const scopeSuppliers = JSON.parse(window.sessionStorage.getItem('scopeSuppliers'))
   if (scopeSuppliers.includes(scopeSupplierFilter)) {
     const filteredCars = scopeCars.filter(car => car['@Name'] === scopeSupplierFilter)
     rederSingleView(filteredCars)
@@ -252,17 +254,25 @@ const sortSelect = document.getElementById('select-sort')
 
 // add event handler if value changes
 sortSelect.addEventListener('change', function () {
-  // this.value;
-  const scopeCars = JSON.parse(window.localStorage.getItem('scopeCars'))
-  const scopeSupplierFilter = JSON.parse(window.localStorage.getItem('scopeSupplierFilter'))
+  const scopeCars = JSON.parse(window.sessionStorage.getItem('scopeCars'))
+  const scopeSupplierFilter = JSON.parse(window.sessionStorage.getItem('scopeSupplierFilter'))
+  let hasSupplyFilter
+  if (scopeSupplierFilter) {
+    hasSupplyFilter = true
+  } else {
+    hasSupplyFilter = false
+  }
+
   if (this.value) {
     const scopeSortQry = this.value
-    window.localStorage.setItem('scopeSortQry', JSON.stringify(scopeSortQry))
+    window.sessionStorage.setItem('scopeSortQry', JSON.stringify(scopeSortQry))
     let filteredCars
-    scopeSortQry !== 'all'
-      ? filteredCars = scopeCars.filter(car => car['@Name'].toLowerCase() === scopeSupplierFilter.toLowerCase())
-      : filteredCars = scopeCars
-    // selectElement('categorySelect', 'Select')
+    if (hasSupplyFilter && !search.value) {
+      const scopeSupplierFilter = JSON.parse(window.sessionStorage.getItem('scopeSupplierFilter'))
+      filteredCars = scopeCars.filter(car => car['@Name'] === scopeSupplierFilter)
+    } else {
+      filteredCars = scopeCars
+    }
     switch (this.value) {
       case 'pricehl':
         // sort by price (low to high) as default, no need to do deepcopy here
@@ -286,6 +296,11 @@ sortSelect.addEventListener('change', function () {
     }
   }
 })
+
+const selectElement = (id, valueToSelect) => {
+  const element = document.getElementById(id)
+  element.value = valueToSelect
+}
 /** helper function
  *  1. check target type
  *  2. deep copy of object or array
@@ -349,10 +364,12 @@ const removeNode = (nodeIdContainer) => {
 const search = document.getElementById('search')
 const showSearch = document.getElementById('showSearch')
 const getSearchInfo = () => {
+  selectElement('categorySelect', 'all')
+  selectElement('select-sort', 'pricelh')
   const searchPattern = `${search.value}`
   const filteredFuzzySuppliers = []
-  const scopeCars = JSON.parse(window.localStorage.getItem('scopeCars'))
-  const scopeSuppliers = JSON.parse(window.localStorage.getItem('scopeSuppliers'))
+  const scopeCars = JSON.parse(window.sessionStorage.getItem('scopeCars'))
+  const scopeSuppliers = JSON.parse(window.sessionStorage.getItem('scopeSuppliers'))
 
   scopeSuppliers.forEach(supplier => {
     if (supplier.toLowerCase().match(searchPattern.toLowerCase())) filteredFuzzySuppliers.push(supplier)
