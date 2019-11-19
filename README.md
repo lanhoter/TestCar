@@ -33,17 +33,17 @@ Start Project
 
 ```
  yarn
- npm run dev
+ yarn dev
 ```
 
 Build
 
 ```
- npm run build
+ yarn build
 ```
 
 
 ```
- npm run build:prod
+ yarn build:prod
 ```
 
