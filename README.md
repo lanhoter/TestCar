@@ -29,3 +29,21 @@ const localApiURi = 'http://0.0.0.0:3000/src/assets/static/cars.json'
 
 
 
+Start Project
+
+```
+ yarn
+ npm run dev
+```
+
+Build
+
+```
+ npm run build
+```
+
+
+```
+ npm run build:prod
+```
+
