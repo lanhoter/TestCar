@@ -224,7 +224,6 @@ const getTotal = (cars) => {
 const renderModal = (currentCar) => {
   // isModal === true if render modal content
   const isModal = true
-  // retrieve currentCar
   const tableRightInnerTd2 = document.createElement('td')
   const modalContent = document.getElementById('modal-content')
   renderSingleTable(currentCar, tableRightInnerTd2, modalContent, isModal)
