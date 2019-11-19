@@ -2,14 +2,12 @@ $brand-white-color: #ffffff;
 
 // mixins
 @mixin regular-font() {
-  font-size: 1rem;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
 }
 
 @mixin bold-font() {
-  font-size: 1rem;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
@@ -21,7 +19,7 @@ $brand-white-color: #ffffff;
 
 body {
   background-color: $brand-white-color;
-  padding: 20px;
+  padding: 1.25rem;
   font-family: Arial;
 }
 
@@ -32,12 +30,28 @@ body {
 }
 
 #search {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
+}
+
+fieldset {
+  label{
+    padding-right:  20px;
+  }
+  .grid-container{
+    label{
+      padding-right:  5px;
+      padding-top: 20px;
+    }
+    select{
+      margin-right: 20px;
+      height: 100%;
+      margin-top: 20px;
+    }
+  }
 }
 
 #showSearch {
-  height: 100px;
-  background: lightblue;
+  height: 3.125rem;
   color: red;
 }
 
@@ -49,8 +63,8 @@ body {
 .grid-item {
   background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  font-size: 30px;
+  padding: 1.25rem;
+  font-size: 1.875rem;
   text-align: center;
 }
 
@@ -66,12 +80,11 @@ table {
   border: 1px solid #ddd;
   width: 100%;
   text-align: left;
-  margin: 10px 0px 10px 0px;
+  margin: 0.625rem 0 0.625rem 0;
   tr {
     th {
       table {
         border: none;
-        min-width: 450px;
 
         td {
           width: 100%;
@@ -80,7 +93,7 @@ table {
     }
   }
   img {
-    max-width: 200px;
+    max-width: 12.5rem;
   }
   tbody {
     tr {
@@ -102,17 +115,18 @@ table {
 
 // modal
 h4 {
-  margin-left: 20px;
+  margin-left: 1.25rem;
 }
 p {
   text-align: left;
   @include regular-font();
 }
 .btn {
-  width: 100px;
-  height: 35px;
-  border-radius: 5px;
-  font-size: 16px;
+  width: 6.25rem;
+  height: 2.1875rem;
+  border-radius: 0.3125rem;
+  font-size: 1rem;
+  @include regular-font();
   color: white;
   background-color: cornflowerblue;
 }
@@ -134,10 +148,10 @@ p {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  width: 70%;
-  height: 50%;
-  margin: 100px auto;
-  border-radius: 10px;
+  width: 60%;
+  height: 60%;
+  margin: 6.25rem auto;
+  border-radius: 0.625rem;
   background-color: $brand-white-color;
   -webkit-animation: zoom 0.6s;
   animation: zoom 0.6s;
@@ -169,9 +183,9 @@ p {
 }
 .close {
   color: #b7b7b7;
-  font-size: 30px;
-  font-weight: bold;
-  margin-right: 20px;
+  font-size: 1.875rem;
+  @include bold-font();
+  margin-right: 1.25rem;
   transition: all 0.3s;
 }
 .close:hover,
@@ -181,27 +195,28 @@ p {
   cursor: pointer;
 }
 .modal-body {
-  padding: 10px;
-  font-size: 16px;
+  padding: 0.625rem;
+  font-size: 1rem;
   box-sizing: border-box;
+  @include regular-font();
 }
 .modal-footer {
   box-sizing: border-box;
   border-top: 1px solid #ccc;
   display: flex;
-  padding: 15px;
+  padding: 0.9375rem;
   justify-content: flex-end;
   align-items: center;
 }
 .modal-footer button {
-  width: 60px;
-  height: 35px;
-  padding: 5px;
+  width: 3.75rem;
+  height: 2.1875rem;
+  padding: 0.3125rem;
   box-sizing: border-box;
-  margin-right: 10px;
-  font-size: 16px;
+  margin-right: 0.625rem;
+  font-size: 1rem;
   color: $brand-white-color;
-  border-radius: 5px;
+  border-radius: 0.3125rem;
   background-color: cornflowerblue;
 }
 .modal-footer button:hover,

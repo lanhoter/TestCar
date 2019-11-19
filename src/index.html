@@ -16,39 +16,35 @@
     <form id='SearchForm'></form>
     <br />
     <div id="reorderSort">
-      <label>Sort by:</label> <select id="sort-item">
-        <option id="price" value="pricelh">Price (low - high)</option>
-        <option id="price" value="pricehl">Price (high - low)</option>
-        <option id="alpha" value="sizesl">Size (small - large)</option>
-        <option id="alpha" value="sizels">Size (large - samll)</option>
+      <label>Sort by:</label>
+      <select id="select-sort">
+        <option value="pricelh">Price (low - high)</option>
+        <option value="pricehl">Price (high - low)</option>
+        <option value="sizesl">Size (small - large)</option>
+        <option value="sizels">Size (large - samll)</option>
       </select>
 
-      <p id="option-selected"></p>
-      <div id="filterCategory">
-        <label>Category: </label>
-        <select id="categorySelect">
-          <option id="all" value="all" selected>Show all</option>
-        </select>
-      </div>
+      <label>Filter By Supplier: </label>
+      <select id="categorySelect">
+        <option value="" disabled selected>Select</option>
+      </select>
     </div>
     <br>
-    <input type="search" name="" id="search" />
-    <div id="showSearch"></div>
+
+    <div id='queryFilter'>
+      <label>Search By Supplier</label>
+      <input type="search" name="" id="search" />
+      <div id="showSearch"></div>
+    </div>
     <br />
-
-    <br>
-
-    <div id='content-listing'>
-
-    </div>
-  </div>
+    <div id='content-listing'></div>
   </div>
 
   <div id="modal" class="modal">
     <div class="modal-content">
       <header class="modal-header">
-        <h4>Vehicle Details</h4>
-        <span class="close">×</span>
+        <h4 id='VehicleDetail'>Vehicle Details</h4>
+        <span class="close">X</span>
       </header>
       <div class="modal-body" id="modal-content">
       </div>
