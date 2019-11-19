@@ -250,28 +250,36 @@ const sortSelect = document.getElementById('select-sort')
 // add event handler if value changes
 sortSelect.addEventListener('change', function () {
   // this.value;
-  switch (this.value) {
-    case 'pricehl':
-      // sort by price (low to high) as default, no need to do deepcopy here
-      scopeCars.sort((a, b) => parseFloat(b.TotalCharge['@RateTotalAmount']) - parseFloat(a.TotalCharge['@RateTotalAmount']))
-      // render single table
-      rederSingleView(scopeCars)
-      break
-    case 'sizesl':
-      scopeCars.sort((a, b) => a.Vehicle['@PassengerQuantity'].localeCompare(b.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
-      rederSingleView(scopeCars)
-      break
-    case 'sizels':
-      scopeCars.sort((a, b) => b.Vehicle['@PassengerQuantity'].localeCompare(a.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
-      rederSingleView(scopeCars)
-      break
-    default:
-      scopeCars.sort((a, b) => parseFloat(a.TotalCharge['@RateTotalAmount']) - parseFloat(b.TotalCharge['@RateTotalAmount']))
-      // render single table
-      rederSingleView(scopeCars)
-      break
+  if (this.value) {
+    selectElement('categorySelect', 'Select')
+    switch (this.value) {
+      case 'pricehl':
+        // sort by price (low to high) as default, no need to do deepcopy here
+        scopeCars.sort((a, b) => parseFloat(b.TotalCharge['@RateTotalAmount']) - parseFloat(a.TotalCharge['@RateTotalAmount']))
+        // render single table
+        rederSingleView(scopeCars)
+        break
+      case 'sizesl':
+        scopeCars.sort((a, b) => a.Vehicle['@PassengerQuantity'].localeCompare(b.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
+        rederSingleView(scopeCars)
+        break
+      case 'sizels':
+        scopeCars.sort((a, b) => b.Vehicle['@PassengerQuantity'].localeCompare(a.Vehicle['@PassengerQuantity'], { ignorePunctuation: true }))
+        rederSingleView(scopeCars)
+        break
+      default:
+        scopeCars.sort((a, b) => parseFloat(a.TotalCharge['@RateTotalAmount']) - parseFloat(b.TotalCharge['@RateTotalAmount']))
+        // render single table
+        rederSingleView(scopeCars)
+        break
+    }
   }
 })
+
+function selectElement (id, valueToSelect) {
+  const element = document.getElementById(id)
+  element.value = valueToSelect
+}
 
 /** helper function
  *  1. check target type
